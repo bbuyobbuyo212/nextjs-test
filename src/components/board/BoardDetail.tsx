@@ -725,12 +725,12 @@ function BoardDetail({ board_id, post_id, boardInfo }: { board_id?: string; post
             <div className="board-detail__meta">
               <span className="board-detail__author">
                 작성자: {board?.nickname 
-                       ? board.nickname 
-                       : (board?.name
-                           ? board.name
-                           : (typeof board?.author === 'object' 
-                               ? (board.author.nickname || board.author.name || board.author.id) 
-                               : (board?.author || '-')))}
+                  ? board.nickname 
+                  : (board?.name
+                  ? board.name
+                  : (typeof board?.author === 'object' 
+                  ? (board.author.nickname || board.author.name || board.author.id) 
+                  : (board?.author || '-')))}
               </span>
               <span className="board-detail__date">작성일: {board.created_at ? formatDate(board.created_at) : (board.createdAt ? formatDate(board.createdAt) : '-')}</span>
               <span className="board-detail__views">조회수: {getViewCount(board)}</span>
