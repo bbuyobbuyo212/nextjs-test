@@ -1,14 +1,15 @@
 import React from 'react';
-import '../../styles/admin.css';
+import Link from 'next/link';
 
 const AdminSidebar = () => (
-  <aside className="admin-sidebar">
-    <ul className="admin-sidebar__menu">
-      <li><a href="/admin/admin-users">회원관리</a></li>
-      <li><a href="/admin/admin-boards">게시판관리</a></li>
-      <li><a href="/admin/admin-menu">메뉴관리</a></li>
-      {/* 추가 메뉴 가능 */}
-    </ul>
+  <aside className="admin-aside">
+    <nav>
+      <ul>
+        <li><Link href="/admin/admin-users">회원관리</Link></li>
+        <li><Link href="/admin/admin-boards">게시판관리</Link></li>
+        <li><Link href="/admin/admin-menu">메뉴관리</Link></li>
+      </ul>
+    </nav>
   </aside>
 );
 

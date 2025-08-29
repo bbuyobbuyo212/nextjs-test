@@ -8,6 +8,7 @@ import '../../styles/layout.css';
 import '../../styles/board.css';
 import '../../styles/board-perm-table.css';
 import '../../styles/admin.css';
+import '../../styles/admin-login.css';
 import '../../styles/gallery.css';
 import '../../styles/alerts.css';
 import './globals.css';
