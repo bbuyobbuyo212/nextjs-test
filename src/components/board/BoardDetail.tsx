@@ -719,20 +719,6 @@ function BoardDetail({ board_id, post_id, boardInfo }: { board_id?: string; post
       <div className="container">
         <BoardTitle board_id={board_id || ''} />
         
-        {/* 로그인 상태 표시 - 클라이언트 사이드 상태 사용 */}
-        <div className="board-detail__login-status">
-          {loginStatus.isLoggedIn ? (
-            <span className="board-detail__login-status-text">
-              {`${loginStatus.displayName}님 로그인 중`}
-            </span>
-          ) : (
-            <>
-              <span className="board-detail__login-status-text">비회원 상태</span>
-              <Link href="/auth/login" className="board-detail__login-link">로그인</Link>
-            </>
-          )}
-        </div>
-        
         {board ? (
           <div>
             <h2 className="board-detail__title board-detail__title--left">{board.title}</h2>

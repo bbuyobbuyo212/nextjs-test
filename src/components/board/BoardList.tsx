@@ -172,20 +172,7 @@ function BoardList({ boardInfo }: { boardInfo?: any }) {
       <div className="container">
         <div className="board-list__header">
           <BoardTitle board_id={boardInfo?.id || ''} />
-          <div className="board-list__top">
-            {/* 로그인 상태 표시 - 클라이언트 상태 사용 */}
-            <div className="board-list__login-status">
-              {loginStatus.isLoggedIn ? (
-                <span className="board-list__login-status-text">
-                  {`${loginStatus.displayName}님 로그인 중`}
-                </span>
-              ) : (
-                <>
-                  <span className="board-list__login-status-text">비회원 상태</span>
-                  <Link href="/auth/login" className="board-list__login-link">로그인</Link>
-                </>
-              )}
-            </div>
+          <div className="board-list__top">            
             <div className="board-list__search">
               <select 
                 className="select-box"
