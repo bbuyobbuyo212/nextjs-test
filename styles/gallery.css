@@ -1,0 +1,41 @@
+.gallery-board__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.gallery-board__loading .loading-spinner {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 1rem;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #3498db;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.gallery-board__error {
+  padding: 2rem;
+  text-align: center;
+  background-color: #fff8f8;
+  border: 1px solid #ffebeb;
+  border-radius: 4px;
+  margin: 2rem 0;
+  color: #e74c3c;
+}
+
+.gallery-board__error p {
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.gallery-board__error button {
+  margin-top: 0.5rem;
+}

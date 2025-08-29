@@ -1,0 +1,180 @@
+.login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  padding: 2rem 0;
+}
+
+.login__wrapper {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 4rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.login__title {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.login__form {
+  margin-bottom: 3rem;
+}
+
+.login__field {
+  margin-bottom: 2rem;
+}
+
+.login__input {
+  width: 100%;
+}
+
+/* 라벨 blind 처리 */
+.login__field .label {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+}
+
+.login__submit {
+  width: 100%;
+  padding: 1.5rem;
+  font-size: 1.6rem;
+  margin-top: 1rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.login__links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  padding: 2rem 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.login__link {
+  color: #666;
+  text-decoration: none;
+  font-size: 1.4rem;
+  transition: color 0.3s ease;
+}
+
+.login__link:hover {
+  color: #007bff;
+}
+
+.login__separator {
+  color: #ddd;
+  font-size: 1.2rem;
+}
+
+.login__social {
+  text-align: center;
+}
+
+.login__social-title {
+  font-size: 1.6rem;
+  color: #333;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.login__social-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.login__social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1.2rem 2rem;
+  border: none;
+  border-radius: 0.6rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 10rem;
+}
+
+.login__social-button--kakao {
+  background-color: #FEE500;
+  color: #3C1E1E;
+}
+
+.login__social-button--kakao:hover {
+  background-color: #E6CC00;
+}
+
+.login__social-button--naver {
+  background-color: #03C75A;
+  color: white;
+}
+
+.login__social-button--naver:hover {
+  background-color: #02B351;
+}
+
+.login__social-button--google {
+  background-color: #4285F4;
+  color: white;
+}
+
+.login__social-button--google:hover {
+  background-color: #3367D6;
+}
+
+.login__social-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .login__wrapper {
+    padding: 3rem 2rem;
+    margin: 1rem;
+  }
+
+  .login__social-buttons {
+    flex-direction: column;
+  }
+
+  .login__social-button {
+    width: 100%;
+  }
+
+  .login__links {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login__wrapper {
+    padding: 2rem 1.5rem;
+  }
+
+  .login__social-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+}

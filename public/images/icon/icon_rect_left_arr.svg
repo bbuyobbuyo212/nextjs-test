@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35">
+  <g id="ico_rect_left_arr" transform="translate(1765 1302) rotate(180)">
+    <g id="사각형_8" data-name="사각형 8" transform="translate(1730 1267)" fill="#fff" stroke="#ddd" stroke-width="1">
+      <rect width="35" height="35" stroke="none"/>
+      <rect x="0.5" y="0.5" width="34" height="34" fill="none"/>
+    </g>
+    <path id="Icon_akar-chevron-left" data-name="Icon akar-chevron-left" d="M18.763,6,10.5,14.263l8.263,8.263" transform="translate(1763.573 1299.027) rotate(180)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+  </g>
+</svg>

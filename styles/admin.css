@@ -1,0 +1,421 @@
+/* 관리자 로그인 화면 고급 스타일 */
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+}
+.admin-login .login__wrapper {
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(78,84,200,0.15);
+  padding: 3rem 2.5rem 2.5rem 2.5rem;
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.admin-login .login__title {
+  color: #4e54c8;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.05em;
+}
+.admin-login .login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.admin-login .login__field {
+  width: 100%;
+}
+.admin-login .login__input {
+  width: 100%;
+  padding: 1.2rem 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid #d1d5db;
+  font-size: 1.35rem;
+  background: #f7f8fa;
+  transition: border-color 0.2s;
+}
+.admin-login .login__input:focus {
+  border-color: #4e54c8;
+  outline: none;
+  background: #fff;
+}
+.admin-login .btn.login__submit {
+  width: 100%;
+  padding: 1.2rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+  color: #fff;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(78,84,200,0.08);
+  cursor: pointer;
+  margin-top: 0.7rem;
+  transition: background 0.2s;
+}
+.admin-login .btn.login__submit:hover {
+  background: linear-gradient(90deg, #8f94fb 0%, #4e54c8 100%);
+}
+.admin-login .login-error {
+  color: #e74c3c;
+  background: #fff0f0;
+  border-radius: 0.7rem;
+  padding: 1.1rem 1.5rem;
+  margin-top: 0.7rem;
+  font-size: 1.25rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(231,76,60,0.08);
+}
+@media (max-width: 600px) {
+  .admin-login .login__wrapper {
+    padding: 2rem 1rem;
+    max-width: 95vw;
+  }
+  .admin-login .login__title {
+    font-size: 1.5rem;
+  }
+}
+.admin-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f6f7fb;
+}
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #263238;
+  color: #fff;
+  padding: 16px 32px;
+}
+.admin-header__logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.admin-header__nav {
+  display: flex;
+  gap: 16px;
+}
+.admin-header__link {
+  color: #fff;
+  text-decoration: underline;
+}
+.admin-header__logout {
+  margin-left: 8px;
+}
+.admin-layout__body {
+  display: flex;
+  flex: 1;
+}
+.admin-aside {
+  width: 200px;
+  background: #37474f;
+  color: #fff;
+  padding: 24px 0;
+}
+.admin-aside ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.admin-aside li {
+  margin-bottom: 16px;
+}
+.admin-aside a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.4rem;
+  padding: 8px 24px;
+  display: block;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.admin-aside a:hover {
+  background: #455a64;
+}
+.admin-layout__content {
+  flex: 1;
+  padding: 32px;
+  background: #fff;
+  min-height: 600px;
+}
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.user-list__header,
+.user-list__row {
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 12px 8px;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+.user-list__header {
+  background: #263238;
+  color: #fff;
+  font-weight: bold;
+}
+
+.user-list__cell {
+  flex: 1 1 0;
+  padding: 4px 8px;
+  word-break: break-all;
+  min-width: 0;
+  text-align: left;
+  font-size:1.4rem;
+}
+
+.user-list__id {
+  flex-basis: 60px;
+  flex-shrink: 0;
+  text-align: center;
+}
+.user-list__actions {
+  flex-basis: 100px;
+  flex-shrink: 0;
+  text-align: center;
+}
+.user-list__empty {
+  padding: 24px;
+  text-align: center;
+  color: #888;
+  background: #fff;
+  border-radius: 6px;
+}
+
+@media (max-width: 900px) {
+  .user-list__header,
+  .user-list__row {
+    font-size: 0.95rem;
+    padding: 10px 4px;
+  }
+  .user-list__id,
+  .user-list__actions {
+    flex-basis: 50px;
+  }
+}
+
+@media (max-width: 600px) {
+  .user-list__header,
+  .user-list__row {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px 4px;
+    gap: 4px;
+  }
+  .user-list__cell {
+    width: 100%;
+    padding: 2px 0;
+    text-align: left;
+  }
+  .user-list__id,
+  .user-list__actions {
+    width: 100%;
+    flex-basis: auto;
+    text-align: left;
+  }
+}
+
+.admin-users__form {
+    display:flex;
+    flex-direction:row;
+}
+.user-search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.user-search-row .input {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.user-search-row .btn {
+  flex-shrink: 0;
+}
+
+
+.user-form-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+  flex-direction:row;
+}
+
+.user-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 18px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  flex-direction:column;
+}
+
+.user-form__input {
+  font-size: 16px;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.user-form__input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.user-form__btn {
+  font-size: 16px;
+  padding: 8px 18px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.user-form__btn.btn--primary {
+  background: #007bff;
+  color: #fff;
+}
+
+.user-form__btn:not(.btn--primary) {
+  background: #e9ecef;
+  color: #333;
+}
+
+.user-form__btn:hover {
+  opacity: 0.85;
+}
+
+.board-search-row--single {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.board-search-row--single .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.board-search-row--single .btn {
+  white-space: nowrap;
+}
+
+.common-list {
+  border: 1px solid #e2e5ea;
+  border-radius: 8px;
+  background: #fff;
+  margin-bottom: 24px;
+  overflow: hidden;
+  font-size:1.4rem;
+}
+.common-list__cell input, 
+.common-list__cell .input {
+  padding: .5rem 1rem;
+  font-size:1.2rem;
+}
+
+.common-list__header,
+.common-list__row {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  border-bottom: 1px solid #e2e5ea;
+}
+
+.common-list__header {
+  background: #f6f8fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.common-list__row:last-child {
+  border-bottom: none;
+}
+
+.common-list__cell {
+  padding:0.5rem 1rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.common-list__id { width: 10rem; }
+.common-list__check { width: 10rem; }
+.common-list__name { flex: 1; width: 120px; }
+.common-list__type { width: 100px; }
+.common-list__desc { flex: 2; width: 160px; }
+.common-list__date { width: 25rem;text-align:center; }
+.common-list__actions { width: 20rem; text-align: center; }
+.common-list__actions2 { width: 30rem; text-align: center; }
+.common-list__menu-subject { flex: 2; min-width: 160px; }
+.common-list__nickname {
+  flex:1;
+  text-align:center;
+}
+
+
+.common-list__empty {
+  padding: 24px;
+  text-align: center;
+  color: #888;
+  background: #fafbfc;
+}
+
+.common-btn-box {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* 버튼이 세로로 나올 경우를 위한 옵션 */
+.common-btn-box.vertical {
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.board-form .board-form__box + .board-form__box {
+  margin-top:1rem;
+}
+
+.admin-menu__top-actions {
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  margin-bottom:2rem;
+  gap:1rem;
+}
+.admin-menu__bottom-actions {
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  margin-top:2rem;
+  gap:1rem;
+}

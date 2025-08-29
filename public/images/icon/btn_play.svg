@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31">
+  <g id="btn_play" transform="translate(952 783) rotate(180)">
+    <g id="사각형_42" data-name="사각형 42" transform="translate(921 752)" fill="#fff" stroke="#dedede" stroke-width="1">
+      <rect width="31" height="31" rx="5" stroke="none"/>
+      <rect x="0.5" y="0.5" width="30" height="30" rx="4.5" fill="none"/>
+    </g>
+    <path id="다각형_1" data-name="다각형 1" d="M6,0l6,10H0Z" transform="translate(931 773) rotate(-90)"/>
+  </g>
+</svg>

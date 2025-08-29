@@ -1,0 +1,17 @@
+<svg id="ico_white_instagram" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="48" height="48" viewBox="0 0 48 48">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_560" data-name="사각형 560" width="48" height="48" rx="5" fill="none" stroke="#fff" stroke-width="5"/>
+    </clipPath>
+  </defs>
+  <g id="마스크_그룹_5" data-name="마스크 그룹 5" transform="translate(0)" clip-path="url(#clip-path)">
+    <g id="그룹_1952" data-name="그룹 1952" transform="translate(0)">
+      <g id="그룹_1951" data-name="그룹 1951" transform="translate(10 10.001)">
+        <path id="패스_2561" data-name="패스 2561" d="M114.19,108H101.933a8.368,8.368,0,0,0-8.369,8.369v12.256a8.366,8.366,0,0,0,8.369,8.366H114.19a8.363,8.363,0,0,0,8.367-8.366V116.367A8.366,8.366,0,0,0,114.189,108m5.7,20.842a5.559,5.559,0,0,1-5.556,5.557H101.788a5.568,5.568,0,0,1-5.556-5.557V116.3a5.557,5.557,0,0,1,5.556-5.556h12.545a5.556,5.556,0,0,1,5.556,5.556Z" transform="translate(-93.564 -108)" fill="#fff"/>
+        <path id="패스_2562" data-name="패스 2562" d="M114.532,121.586a7.522,7.522,0,1,0,7.525,7.524,7.522,7.522,0,0,0-7.525-7.524m0,12.4a4.877,4.877,0,1,1,4.876-4.875,4.877,4.877,0,0,1-4.876,4.875" transform="translate(-100.036 -114.539)" fill="#fff"/>
+        <path id="패스_2563" data-name="패스 2563" d="M134.882,117.653a1.758,1.758,0,1,0,1.758,1.758,1.758,1.758,0,0,0-1.758-1.758" transform="translate(-112.609 -112.645)" fill="#fff"/>
+      </g>
+    </g>
+    <rect id="사각형_560-2" data-name="사각형 560" width="48" height="48" rx="5" fill="none" stroke="#fff" stroke-width="5"/>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_686" data-name="사각형 686" width="40" height="40" rx="5" fill="#d1262b"/>
+    </clipPath>
+  </defs>
+  <g id="ico_youtube" transform="translate(-0.242)">
+    <g id="마스크_그룹_11" data-name="마스크 그룹 11" transform="translate(0.242)" clip-path="url(#clip-path)">
+      <rect id="사각형_560" data-name="사각형 560" width="40" height="40" rx="5" fill="#d1262b"/>
+      <g id="그룹_1936" data-name="그룹 1936" transform="translate(8.514 12.101)">
+        <path id="패스_2531" data-name="패스 2531" d="M236.936,415.556c-.859-.121-4.991-.284-8.277-.284s-7.413.16-8.277.284a2.971,2.971,0,0,0-2.739,2.588,41.563,41.563,0,0,0-.347,4.88v.264a41.652,41.652,0,0,0,.347,4.883,2.968,2.968,0,0,0,2.739,2.584c.865.121,5,.283,8.278.283h-.015c3.285,0,7.42-.16,8.278-.285a2.974,2.974,0,0,0,2.743-2.584,42.181,42.181,0,0,0,.343-4.883v-.264a42.089,42.089,0,0,0-.343-4.88,2.973,2.973,0,0,0-2.743-2.588" transform="translate(-217.295 -415.272)" fill="#fff"/>
+        <path id="패스_2532" data-name="패스 2532" d="M234.025,425.23l5.446,2.781-5.446,2.917Z" transform="translate(-225.379 -420.196)" fill="#d02628"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="151" height="151" viewBox="0 0 151 151">
+  <g id="icon_cr_google" transform="translate(-321.5 -749.5)">
+    <circle id="타원_11" data-name="타원 11" cx="75" cy="75" r="75" transform="translate(322 750)" fill="none" stroke="#ddd" stroke-width="1"/>
+    <g id="그룹_71" data-name="그룹 71" transform="translate(295.158 741.222)">
+      <path id="패스_67" data-name="패스 67" d="M206.923,131.627a56.2,56.2,0,0,0-.889-10H159.991v18.911H186.3a22.487,22.487,0,0,1-9.755,14.755v12.266h15.8c9.244-8.511,14.577-21.044,14.577-35.932Z" transform="translate(-57.262 -46.851)" fill="#4285f4" fill-rule="evenodd"/>
+      <path id="패스_68" data-name="패스 68" d="M108.819,200.694c13.2,0,24.266-4.378,32.354-11.844l-15.8-12.266a29.385,29.385,0,0,1-16.555,4.667c-12.733,0-23.51-8.6-27.354-20.155H65.132v12.667a48.869,48.869,0,0,0,43.687,26.932Z" transform="translate(-6.09 -68.141)" fill="#34a853" fill-rule="evenodd"/>
+      <path id="패스_69" data-name="패스 69" d="M75.375,124.5a28.894,28.894,0,0,1,0-18.577V93.257H59.042a48.95,48.95,0,0,0,0,43.909L75.375,124.5Z" transform="translate(0 -31.546)" fill="#fbbc05" fill-rule="evenodd"/>
+      <path id="패스_70" data-name="패스 70" d="M108.819,54.222a26.411,26.411,0,0,1,18.688,7.311l14.021-14.022a46.984,46.984,0,0,0-32.71-12.733A48.87,48.87,0,0,0,65.132,61.711L81.465,74.377c3.844-11.555,14.622-20.155,27.354-20.155Z" transform="translate(-6.09)" fill="#ea4335" fill-rule="evenodd"/>
+    </g>
+  </g>
+</svg>

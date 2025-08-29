@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31">
+  <g id="btn_pause" transform="translate(952 783) rotate(180)">
+    <g id="사각형_42" data-name="사각형 42" transform="translate(921 752)" fill="#fff" stroke="#dedede" stroke-width="1">
+      <rect width="31" height="31" rx="5" stroke="none"/>
+      <rect x="0.5" y="0.5" width="30" height="30" rx="4.5" fill="none"/>
+    </g>
+    <g id="그룹_302" data-name="그룹 302">
+      <rect id="사각형_43" data-name="사각형 43" width="2" height="14" transform="translate(938 761)" fill="#1a1818"/>
+      <rect id="사각형_44" data-name="사각형 44" width="2" height="14" transform="translate(933 761)" fill="#1a1818"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,31 @@
+.board-perm-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.board-perm-table th, .board-perm-table td {
+  border: 1px solid #e2e2e2;
+  padding: 10px 12px;
+  text-align: center;
+}
+.board-perm-table th {
+  background: #f7f7fa;
+  font-weight: 600;
+  color: #333;
+}
+.board-perm-table td {
+  background: #fafbfc;
+  color: #444;
+}
+.board-perm-table tr:nth-child(even) td {
+  background: #f2f4f7;
+}
+.board-perm-table input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3b82f6;
+}

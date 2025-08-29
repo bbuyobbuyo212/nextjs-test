@@ -1,0 +1,165 @@
+.find-id {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  padding: 2rem 0;
+}
+
+.find-id__wrapper {
+  position:relative;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 4rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 45rem;
+  width: 100%;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.find-id__title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.find-id__description {
+  text-align: center;
+  font-size: 1.4rem;
+  color: #666;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+}
+
+.find-id__form {
+  margin-bottom: 2rem;
+}
+
+.find-id__field {
+  margin-bottom: 3rem;
+}
+
+.find-id__input {
+  width: 100%;
+}
+
+.find-id__error {
+  display: block;
+  color: #dc3545;
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.find-id__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.find-id__actions .btn {
+  flex: 1;
+  padding: 1.5rem;
+  font-size: 1.6rem;
+}
+
+.find-id__actions .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 결과 화면 */
+.find-id__result {
+  text-align: center;
+}
+
+.find-id__success-icon {
+  margin-bottom: 2rem;
+}
+
+.find-id__success-icon svg {
+  position:relative;
+  margin-left:auto;
+  margin-right:auto;
+  width: 6rem;
+  height: 6rem;
+  color: #28a745;
+  background-color: #f8fff9;
+  border-radius: 50%;
+  padding: 1.2rem;
+}
+
+.find-id__success-message {
+  font-size: 1.6rem;
+  color: #333;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+}
+
+.find-id__found-id {
+  background-color: #f8f9fa;
+  border: 2px solid #28a745;
+  border-radius: 0.8rem;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.find-id__found-label {
+  font-size: 1.4rem;
+  color: #666;
+  margin-right: 1rem;
+}
+
+.find-id__found-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #28a745;
+  letter-spacing: 0.1rem;
+}
+
+.find-id__result-actions {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.find-id__result-actions .btn {
+  padding: 1.5rem 2.5rem;
+  font-size: 1.6rem;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .find-id__wrapper {
+    padding: 3rem 2rem;
+    margin: 1rem;
+  }
+
+  .find-id__actions,
+  .find-id__result-actions {
+    flex-direction: column;
+  }
+
+  .find-id__success-icon svg {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .find-id__found-value {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .find-id__wrapper {
+    padding: 2rem 1.5rem;
+  }
+
+  .find-id__found-id {
+    padding: 1.5rem;
+  }
+
+  .find-id__result-actions .btn {
+    width: 100%;
+  }
+}

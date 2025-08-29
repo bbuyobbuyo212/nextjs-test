@@ -1,0 +1,163 @@
+.register {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 2rem 0;
+}
+
+.register__wrapper {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 4rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+.register__title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.register__required-notice {
+  text-align: center;
+  font-size: 1.3rem;
+  color: #666;
+  margin-bottom: 3rem;
+}
+
+.register__required-mark {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.register__form {
+  margin-bottom: 2rem;
+}
+
+.register__field {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.register__input {
+  width: 100%;
+  padding-right: 9rem;
+}
+
+.register__password-wrapper {
+  position: relative;
+}
+
+.register__password-input {
+  padding-right: 4.5rem;
+}
+
+.register__password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register__password-toggle:hover {
+  color: #007bff;
+}
+
+.register__password-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.register__error {
+  display: block;
+  color: #dc3545;
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.register__message {
+  display: block;
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.input--error {
+  border-color: #dc3545;
+}
+
+.input--error:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+
+.register__actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.success-message {
+  color: #28a745;
+}
+
+.error-message {
+  color: #dc3545;
+}
+
+/* 중복확인 버튼 스타일 */
+.register__check-button {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0.4rem;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.register__check-button:hover {
+  background-color: #0069d9;
+}
+
+.register__actions .btn {
+  flex: 1;
+  padding: 1.5rem;
+  font-size: 1.6rem;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .register__wrapper {
+    padding: 3rem 2rem;
+    margin: 1rem;
+  }
+
+  .register__actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .register__wrapper {
+    padding: 2rem 1.5rem;
+  }
+
+  .register__password-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+}

@@ -1,0 +1,114 @@
+.complete {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 0;
+}
+
+.complete__wrapper {
+  background-color: white;
+  border-radius: 1.5rem;
+  padding: 5rem 4rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 50rem;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.complete__icon {
+  margin-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.complete__check-icon {
+  width: 8rem;
+  height: 8rem;
+  color: #28a745;
+  background-color: #f8fff9;
+  border-radius: 50%;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.complete__title {
+  color: #333;
+  margin-bottom: 3rem;
+}
+
+.complete__message {
+  margin-bottom: 4rem;
+  text-align: center;
+  width: 100%;
+}
+
+.complete__welcome {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.complete__description {
+  font-size: 1.4rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.complete__button {
+  padding: 1.5rem 4rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  min-width: 20rem;
+  margin: 0 auto;
+  display: block;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .complete__wrapper {
+    padding: 4rem 3rem;
+    margin: 1rem;
+  }
+
+  .complete__check-icon {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .complete__title {
+    font-size: 2rem;
+  }
+
+  .complete__welcome {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .complete__wrapper {
+    padding: 3rem 2rem;
+  }
+
+  .complete__check-icon {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .complete__title {
+    font-size: 1.8rem;
+  }
+
+  .complete__button {
+    width: 100%;
+    min-width: auto;
+  }
+}

@@ -1,0 +1,1078 @@
+
+"use client";
+/**
+ * 게시글 상세 정보를 보여주는 컴포넌트입니다.
+ * 
+ * - 게시글의 제목, 작성자, 작성일, 조회수, 첨부파일, 링크, 본문 내용을 표시합니다.
+ * - 댓글 목록을 토글하여 보여줄 수 있으며, 댓글에 답글도 지원합니다.
+ * - 이전글/다음글 네비게이션을 제공합니다.
+ * - 목록으로 돌아가는 버튼을 제공합니다.
+ * 
+ * @component
+ * @example
+ * <BoardDetail />
+ */
+import React, { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
+import { useRouter, useParams } from 'next/navigation';
+import { getCookie, getUserCookie } from '@/lib/cookie';
+import type { Comment } from '../../types/board';
+import type { Board } from '../../types/board';
+import type { PaginationInfo } from '../../types/board';
+import CommentForm from './CommentForm';
+import PasswordModal from './PasswordModal';
+
+// Board 타입 확장 (비회원 필드 추가)
+interface ExtendedBoard extends Board {
+  nickname?: string;
+  name?: string;
+  author: any; // string | object
+}
+
+// Board 타입 확장 (비회원 필드 추가)
+interface ExtendedBoard extends Board {
+  nickname?: string;
+  name?: string;
+  author: any; // string | object
+}
+function getViewCount(board: any): string {
+  if (!board || typeof board !== 'object') return '-';
+  const candidates = [
+    'view_count', 'viewCount', 'views', 'viewsCount', 'count', 'hit', 'hitCount'
+  ];
+  for (const key of candidates) {
+    if (key in board) {
+      const value = board[key];
+      if (typeof value === 'number' && !isNaN(value)) return value.toString();
+      if (typeof value === 'string' && value.trim() !== '') {
+        // 숫자 문자열이면 숫자로 변환
+        const num = Number(value);
+        if (!isNaN(num)) return num.toString();
+        return value;
+      }
+    }
+  }
+  return '-';
+}
+
+interface ReplyFormState {
+  commentId: number;
+  targetUser: string;
+  parentId?: number;
+  depth: number;
+}
+  // 디버깅: 현재 세션과 user_id 로그
+  // (이 부분은 useEffect 내부에서 처리됨)
+
+interface EditFormState {
+  commentId: number;
+  content: string;
+  isReply: boolean;
+}
+
+
+
+function BoardDetail({ board_id, post_id, boardInfo }: { board_id?: string; post_id?: string; boardInfo?: any }) {
+  // ...existing code...
+
+  // 댓글/대댓글 작성 후, 상세/댓글 갱신을 위한 fetchDetail 함수 (중복 제거)
+  const fetchDetail = async () => {
+    if (!board_id || !post_id) {
+      setBoard(null);
+      setPageInfo(null);
+      setComments([]);
+      return;
+    }
+    try {
+      const res = await fetch(`/api/board/${board_id}/${post_id}`);
+      const data = await res.json();
+      if (!res.ok || !data.success || !data.detail) {
+        setBoard(null);
+        setComments([]);
+        setPageInfo(null);
+        return;
+      }
+      setBoard(data.detail);
+      const rawComments = Array.isArray(data.detail.comments) ? data.detail.comments : [];
+      const mappedComments = rawComments.map((c: any) => ({
+        id: c.id,
+        content: c.content,
+        author: {
+          id: c.user_id ?? 0,
+          name: c.name ?? '',
+          nickname: c.nickname ?? '',
+        },
+        createdAt: c.created_at ?? '',
+        parentId: c.parent_id ?? undefined,
+        targetUser: c.target_user ?? undefined,
+        replies: [],
+      }));
+      setComments(buildCommentTree(mappedComments));
+      setPageInfo(data.pageInfo ?? null);
+    } catch (err) {
+      setBoard(null);
+      setComments([]);
+      setPageInfo(null);
+    }
+  };
+  // 평면 댓글 배열을 트리 구조로 변환
+  function buildCommentTree(flatComments: Comment[]): Comment[] {
+    const map = new Map<number, Comment>();
+    const roots: Comment[] = [];
+    flatComments.forEach(comment => {
+      comment.replies = [];
+      map.set(comment.id, comment);
+    });
+    flatComments.forEach(comment => {
+      if (comment.parentId) {
+        const parent = map.get(comment.parentId);
+        if (parent) parent.replies!.push(comment);
+      } else {
+        roots.push(comment);
+      }
+    });
+    return roots;
+  }
+  // JWT 기반 사용자 정보 추출 (함수 최상단에 위치)
+  let currentUser: { id?: string; nickname?: string; name?: string; isAdmin?: boolean } | null = null;
+  if (typeof window !== 'undefined') {
+    const userData = getUserCookie();
+    if (userData) {
+      currentUser = {
+        id: userData.id || userData.userid || '',
+        nickname: userData.nickname || userData.name || '',
+        name: userData.name || '',
+        isAdmin: userData.isAdmin === true
+      };
+    }
+  }
+  const router = useRouter();
+  const [board, setBoard] = useState<ExtendedBoard | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [showComments, setShowComments] = useState(false);
+  const [pageInfo, setPageInfo] = useState<PaginationInfo | null>(null);
+  const [showCommentForm, setShowCommentForm] = useState(false);
+  const [replyForm, setReplyForm] = useState<ReplyFormState | null>(null);
+  const [editForm, setEditForm] = useState<EditFormState | null>(null);
+  
+  // 비밀번호 모달 관련 상태
+  const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
+  const [passwordModalType, setPasswordModalType] = useState<'edit' | 'delete'>('edit');
+  const [password, setPassword] = useState<string>('');
+  // ...next-auth 관련 코드 제거됨
+
+  // 게시글 상세 및 이전/다음글 fetch (중복 제거된 fetchDetail 사용)
+  useEffect(() => {
+    fetchDetail();
+  }, [board_id, post_id]);
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '-';
+    try {
+      return new Date(dateString).toLocaleString('ko-KR');
+    } catch {
+      return dateString;
+    }
+  };
+
+  // 첨부파일 정규화: 문자열/객체/다양한 키(downloadUrl|url, originalName|fileName|name) 모두 대응
+  const normalizedFiles = useMemo(() => {
+    const raw = (board as any)?.files;
+    if (!raw) return [] as Array<{ id: number; originalName: string; downloadUrl: string }>;
+    let arr: any[] = [];
+    try {
+      if (typeof raw === 'string') {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) arr = parsed;
+      } else if (Array.isArray(raw)) {
+        arr = raw;
+      } else if (typeof raw === 'object' && raw !== null) {
+        arr = [raw];
+      }
+    } catch {
+      arr = [];
+    }
+    // 각 파일 객체를 표준화
+    return arr.map((file, idx) => ({
+      id: file.id ?? idx,
+      originalName: file.originalName ?? file.fileName ?? file.name ?? '',
+      downloadUrl: file.downloadUrl ?? file.url ?? '',
+    }));
+  }, [board]);
+  // 이미지 파일 여부 판별 함수
+  function isImageUrl(url: string) {
+    return /\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(url);
+  }
+  
+  // 게시글 수정/삭제 핸들러
+  const handleEditPost = () => {
+    if (!board_id || !post_id) {
+      alert('게시글 정보가 올바르지 않습니다.');
+      return;
+    }
+    
+    // 비회원 글인 경우 비밀번호 모달 표시
+    if (board && (board.author === 'guest' || (typeof board.author === 'object' && board.author?.id === 'guest'))) {
+      setPasswordModalType('edit');
+      setShowPasswordModal(true);
+      setPassword('');
+      return;
+    }
+    
+    // 회원 글인 경우 바로 수정 페이지로 이동
+    router.push(`/board/${board_id}/write?edit=true&post_id=${post_id}`);
+  };
+  
+  // 비밀번호 확인 후 수정 페이지로 이동
+  const handlePasswordSubmitForEdit = async () => {
+    if (!password.trim()) {
+      alert('비밀번호를 입력해주세요.');
+      return;
+    }
+    
+    try {
+      // 비밀번호 검증 API 호출
+      const response = await fetch('/api/board/board-edit/verify-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          board_id,
+          post_id,
+          password
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // 비밀번호가 일치하면 수정 페이지로 이동하며 비밀번호를 함께 전달
+        console.log('[비회원 게시글 수정] 비밀번호 검증 성공:', password);
+        setShowPasswordModal(false);
+        router.push(`/board/${board_id}/write?edit=true&post_id=${post_id}&password=${encodeURIComponent(password)}`);
+      } else {
+        alert(data.error || '비밀번호가 일치하지 않습니다.');
+      }
+    } catch (error) {
+      console.error('비밀번호 검증 오류:', error);
+      alert('비밀번호 검증 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  const handleDeletePost = () => {
+    if (!board_id || !post_id) {
+      alert('게시글 정보가 올바르지 않습니다.');
+      return;
+    }
+    
+    // 비회원 글인 경우 비밀번호 모달 표시
+    if (board && (board.author === 'guest' || (typeof board.author === 'object' && board.author?.id === 'guest'))) {
+      setPasswordModalType('delete');
+      setShowPasswordModal(true);
+      setPassword('');
+      return;
+    }
+    
+    // 회원 글인 경우 확인 후 삭제
+    if (!confirm('정말 이 게시글을 삭제하시겠습니까?')) {
+      return;
+    }
+    
+    handleMemberDeletePost();
+  };
+  
+  // 비밀번호 확인 후 게시글 삭제
+  const handlePasswordSubmitForDelete = async () => {
+    if (!password.trim()) {
+      alert('비밀번호를 입력해주세요.');
+      return;
+    }
+    
+    try {
+      const response = await fetch('/api/board/board-delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          board_id,
+          post_id,
+          password
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setShowPasswordModal(false);
+        alert('게시글이 삭제되었습니다.');
+        router.push(`/board/${board_id}`);
+      } else {
+        alert(data.error || '게시글 삭제에 실패했습니다. 비밀번호가 일치하지 않거나 서버 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.error('게시글 삭제 오류:', error);
+      alert('게시글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+  
+  // 회원 게시글 삭제
+  const handleMemberDeletePost = async () => {
+    try {
+      // 로그인 사용자 정보 확인
+      if (!currentUser?.id) {
+        alert('로그인 후 삭제할 수 있습니다.');
+        return;
+      }
+      
+      const response = await fetch('/api/board/board-delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAuthToken()}`
+        },
+        body: JSON.stringify({
+          board_id,
+          post_id,
+          userid: currentUser.id
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        alert('게시글이 삭제되었습니다.');
+        router.push(`/board/${board_id}`);
+      } else {
+        alert(data.error || '게시글 삭제에 실패했습니다. 권한이 없거나 서버 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.error('게시글 삭제 오류:', error);
+      alert('게시글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+    }
+    
+    // 비회원 글인 경우 비밀번호 모달 표시
+    if (board && (board.author === 'guest' || (typeof board.author === 'object' && board.author?.id === 'guest'))) {
+      setPasswordModalType('edit');
+      setShowPasswordModal(true);
+      return;
+    }
+    
+    // 회원 글인 경우 바로 수정 페이지로 이동
+    router.push(`/board/${board_id}/write?edit=true&post_id=${post_id}`);
+  };
+  
+  // 비밀번호 확인 후 수정 페이지로 이동
+  const handlePasswordSubmitForEdit = async () => {
+    if (!password.trim()) {
+      alert('비밀번호를 입력해주세요.');
+      return;
+    }
+    
+    try {
+      // 비밀번호 검증 API 호출
+      const response = await fetch('/api/board/board-edit/verify-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          board_id,
+          post_id,
+          password
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // 비밀번호가 일치하면 수정 페이지로 이동하며 비밀번호를 함께 전달
+        console.log('[비회원 게시글 수정] 비밀번호 검증 성공:', password);
+        setShowPasswordModal(false);
+        router.push(`/board/${board_id}/write?edit=true&post_id=${post_id}&password=${encodeURIComponent(password)}`);
+      } else {
+        alert(data.error || '비밀번호가 일치하지 않습니다.');
+      }
+    } catch (error) {
+      console.error('비밀번호 검증 오류:', error);
+      alert('비밀번호 검증 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  const handleDeletePost = () => {
+    if (!board_id || !post_id) {
+      alert('게시글 정보가 올바르지 않습니다.');
+      return;
+    }
+    
+    // 비회원 글인 경우 비밀번호 모달 표시
+    if (board && (board.author === 'guest' || (typeof board.author === 'object' && board.author?.id === 'guest'))) {
+      setPasswordModalType('delete');
+      setShowPasswordModal(true);
+      return;
+    }
+    
+    // 회원 글인 경우 확인 후 삭제
+    if (!confirm('정말 이 게시글을 삭제하시겠습니까?')) {
+      return;
+    }
+    
+    handleMemberDeletePost();
+  };
+  
+  // 비밀번호 확인 후 게시글 삭제
+  const handlePasswordSubmitForDelete = async () => {
+    if (!password.trim()) {
+      alert('비밀번호를 입력해주세요.');
+      return;
+    }
+    
+    try {
+      const response = await fetch('/api/board/board-delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          board_id,
+          post_id,
+          password
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setShowPasswordModal(false);
+        alert('게시글이 삭제되었습니다.');
+        router.push(`/board/${board_id}`);
+      } else {
+        alert(data.error || '게시글 삭제에 실패했습니다. 비밀번호가 일치하지 않거나 서버 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.error('게시글 삭제 오류:', error);
+      alert('게시글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+  
+  // 회원 게시글 삭제
+  const handleMemberDeletePost = async () => {
+    try {
+      // 로그인 사용자 정보 확인
+      if (!currentUser?.id) {
+        alert('로그인 후 삭제할 수 있습니다.');
+        return;
+      }
+      
+      const response = await fetch('/api/board/board-delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAuthToken()}`
+        },
+        body: JSON.stringify({
+          board_id,
+          post_id,
+          userid: currentUser.id
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        alert('게시글이 삭제되었습니다.');
+        router.push(`/board/${board_id}`);
+      } else {
+        alert(data.error || '게시글 삭제에 실패했습니다. 권한이 없거나 서버 오류가 발생했습니다.');
+      }
+    } catch (error) {
+      console.error('게시글 삭제 오류:', error);
+      alert('게시글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+      alert('게시글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+  // 댓글 작성 핸들러
+  const handleCommentSubmit = async (
+    content: string,
+    extra?: { name?: string; nickname?: string; password?: string }
+  ) => {
+    if (!content.trim()) {
+      alert('댓글 내용을 입력해주세요.');
+      return;
+    }
+    try {
+      const body = {
+        board_id: board_id,
+        post_id: post_id,
+        content,
+        userid: currentUser?.id,
+        nickname: currentUser?.nickname,
+        name: extra?.name,
+        password: extra?.password,
+      };
+      const res = await fetch(`/api/board/comment-form`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (data.success && data.result) {
+        setShowCommentForm(false);
+        await fetchDetail();
+      } else {
+        throw new Error(data.error || '댓글 등록 실패');
+      }
+    } catch (error) {
+      alert('댓글 작성 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  // 대댓글 포함 전체 댓글 수 계산
+  const totalCommentCount = useMemo(() => {
+    const countTree = (list: Comment[] | undefined): number => {
+      if (!Array.isArray(list) || list.length === 0) return 0;
+      let acc = 0;
+      for (const c of list) {
+        acc += 1;
+        if (Array.isArray(c.replies) && c.replies.length) {
+          acc += countTree(c.replies);
+        }
+      }
+      return acc;
+    };
+    return countTree(comments);
+  }, [comments]);
+
+  // JWT 토큰 추출
+  const getAuthToken = () => {
+    if (typeof window !== 'undefined') {
+      return getCookie('token') || '';
+    }
+    return '';
+  };
+
+  // 댓글 수정
+  const handleEditComment = async (
+    commentId: number,
+    newContent: string,
+    isReply: boolean,
+    extra?: { password?: string; nickname?: string }
+  ) => {
+    if (!newContent.trim()) {
+      alert('댓글 내용을 입력해주세요.');
+      return;
+    }
+    const body: any = {
+      board_id: board_id,
+      id: commentId,
+      content: newContent,
+      userid: currentUser?.id,
+      password: extra?.password,
+    };
+    try {
+      const res = await fetch(`/api/board/comment-edit`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setComments(prev => updateCommentInReplies(prev, commentId, newContent));
+        setEditForm(null);
+      } else {
+        alert(data.error || data.message || '댓글 수정 실패');
+      }
+    } catch (error) {
+      alert('댓글 수정 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  // 댓글 삭제
+  const handleDeleteComment = async (commentId: number, isReply: boolean) => {
+    const body = {
+      board_id: board_id,
+      id: commentId,
+      userid: currentUser?.id,
+      // 비회원일 경우 password 입력받아 추가
+    };
+    try {
+      const res = await fetch(`/api/board/comment-delete`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setComments(prevComments => removeCommentFromReplies(prevComments, commentId));
+      } else {
+        alert(data.error || '댓글 삭제 실패');
+      }
+    } catch (error) {
+      alert('댓글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  // 대댓글 작성
+  const handleReplySubmit = async (
+    content: string,
+    extra?: { name?: string; nickname?: string; password?: string }
+  ) => {
+    if (!replyForm || !content.trim()) {
+      alert('답글 내용을 입력해주세요.');
+      return;
+    }
+    try {
+      const body = {
+        board_id: board_id,
+        post_id: post_id,
+        parent_id: replyForm.commentId,
+        target_user: replyForm.targetUser,
+        content,
+        userid: currentUser?.id,
+        nickname: currentUser?.nickname,
+        name: extra?.name,
+        password: extra?.password,
+      };
+      const res = await fetch(`/api/board/comment-form`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (data.success && data.result) {
+        setReplyForm(null);
+        await fetchDetail();
+      } else {
+        throw new Error(data.error || '답글 등록 실패');
+      }
+    } catch (error) {
+      alert('답글 작성 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
+
+  const handleReplyClick = (commentId: number, targetUser: string, parentId?: number, depth: number = 1) => {
+    if (replyForm?.commentId === commentId) {
+      setReplyForm(null);
+    } else {
+      setReplyForm({ 
+        commentId, 
+        targetUser, 
+        parentId: parentId || commentId,
+        depth 
+      });
+      setShowCommentForm(false);
+      setEditForm(null);
+    }
+  };
+
+  // 답글 폼 취소 핸들러
+  const handleReplyFormCancel = () => {
+    setReplyForm(null);
+  };
+
+  // 댓글 폼 취소 핸들러
+  const handleCommentFormCancel = () => {
+    setShowCommentForm(false);
+  };
+
+  const handleEditClick = (commentId: number, content: string, isReply: boolean) => {
+    if (editForm?.commentId === commentId) {
+      setEditForm(null);
+    } else {
+      setEditForm({ commentId, content, isReply });
+      setReplyForm(null);
+      setShowCommentForm(false);
+    }
+  };
+
+  // 재귀적으로 대댓글 업데이트
+  const updateCommentInReplies = (replies: Comment[], commentId: number, newContent: string): Comment[] => {
+    return replies.map(reply => {
+      if (reply.id === commentId) {
+        return { ...reply, content: newContent };
+      }
+      if (reply.replies && reply.replies.length > 0) {
+        return {
+          ...reply,
+          replies: updateCommentInReplies(reply.replies, commentId, newContent)
+        };
+      }
+      return reply;
+    });
+  };
+
+  // 재귀적으로 대댓글 삭제
+  const removeCommentFromReplies = (replies: Comment[], commentId: number): Comment[] => {
+    return replies.filter(reply => reply.id !== commentId).map(reply => ({
+      ...reply,
+      replies: reply.replies ? removeCommentFromReplies(reply.replies, commentId) : []
+    }));
+  };
+
+  // 재귀적으로 대댓글에 새 답글 추가
+  const addReplyToComment = (replies: Comment[], targetCommentId: number, newReply: Comment): Comment[] => {
+    return replies.map(reply => {
+      if (reply.id === targetCommentId) {
+        return {
+          ...reply,
+          replies: [...(reply.replies || []), newReply]
+        };
+      }
+      if (reply.replies && reply.replies.length > 0) {
+        return {
+          ...reply,
+          replies: addReplyToComment(reply.replies, targetCommentId, newReply)
+        };
+      }
+      return reply;
+    });
+  };
+
+  // 트리 어디서든 parentId(=targetCommentId)를 찾아 새 reply 삽입
+  const insertReply = (list: Comment[], targetCommentId: number, newReply: Comment): Comment[] => {
+    return list.map(node => {
+      if (node.id === targetCommentId) {
+        return { ...node, replies: [ ...(node.replies || []), newReply ] };
+      }
+      if (node.replies && node.replies.length) {
+        return { ...node, replies: insertReply(node.replies, targetCommentId, newReply) };
+      }
+      return node;
+    });
+  };
+
+  // 댓글 렌더링 함수 (오류 없는 JSX 구조, JWT 기반 권한 처리)
+  const renderComment = (comment: Comment, isReply = false, depth = 1): React.ReactNode => {
+    // JWT 기반 회원: user_id와 현재 로그인된 회원의 id가 정확히 일치할 때만 수정/삭제 버튼 노출
+    let canEditDelete = false;
+    if (typeof window !== 'undefined') {
+      const userData = getUserCookie();
+      if (userData && comment.author && typeof comment.author.name === 'string') {
+        canEditDelete = String(userData.id || userData.userid || '').trim() === String(comment.author.name).trim();
+      }
+    }
+    return (
+      <div key={comment.id} className={`comment ${isReply ? 'comment--reply' : ''} comment--depth-${Math.min(depth, 6)}`}>
+        <div className="comment__header">
+          <span className="comment__author">
+            {(() => {
+              if (!comment.author) return '-';
+              if (typeof comment.author === 'object') {
+                // 닉네임 우선 표시, 없으면 이름, 없으면 ID
+                return comment.author.nickname || comment.author.name || comment.author.id || '-';
+              }
+              return typeof comment.author === 'string' ? comment.author : '-';
+            })()}
+          </span>
+          <span className="comment__date">({formatDate(comment.createdAt)})</span>
+        </div>
+        <div className="comment__content">
+          {isReply && comment.targetUser && (
+            <span className="comment__mention">@{comment.targetUser} </span>
+          )}
+          {editForm?.commentId === comment.id ? (
+            <CommentForm
+              initialContent={editForm.content}
+              onSubmit={(content, extra) => handleEditComment(comment.id, content, isReply, extra)}
+              onCancel={handleCommentFormCancel}
+              isReply={isReply}
+              isEdit={true}
+              user={currentUser}
+            />
+          ) : (
+            comment.content
+          )}
+        </div>
+        <div className="comment__actions">
+          <button 
+            className="comment__action-btn"
+            onClick={() => handleReplyClick(
+              comment.id,
+              (comment.author && typeof comment.author === 'object' ? (comment.author.name ?? comment.author.nickname ?? comment.author.id ?? '') : (typeof comment.author === 'string' ? comment.author : '')),
+              comment.parentId || comment.id,
+              depth + 1
+            )}
+            type="button"
+          >
+            댓글달기
+          </button>
+          {canEditDelete && (
+            <div className="comment__actions-right">
+              <button 
+                className="comment__action-btn" 
+                type="button"
+                onClick={() => handleEditClick(comment.id, comment.content, isReply)}
+              >
+                수정
+              </button>
+              <button 
+                className="comment__action-btn" 
+                type="button"
+                onClick={() => handleDeleteComment(comment.id, isReply)}
+              >
+                삭제
+              </button>
+            </div>
+          )}
+        </div>
+        {replyForm?.commentId === comment.id && (
+          <CommentForm
+            onSubmit={(content, extra) => handleReplySubmit(content, extra)}
+            onCancel={handleReplyFormCancel}
+            placeholder={`@${replyForm.targetUser}님에게 답글을 입력하세요`}
+            isReply={true}
+            targetUser={replyForm.targetUser}
+            user={currentUser}
+          />
+        )}
+        {comment.replies && comment.replies.length > 0 && 
+          comment.replies.map(reply => renderComment(reply, true, depth + 1))
+        }
+      </div>
+    );
+  };
+
+  // BoardTitle 컴포넌트 스코프 및 fetch 구문 오류 수정
+  function BoardTitle({board_id }: { board_id: string }) {
+    const [boardName, setBoardName] = useState('');
+    useEffect(() => {
+      fetch(`/api/board/board-meta?board_id=${board_id}`)
+        .then(res => res.json())
+        .then((data: any) => setBoardName(data.name || board_id));
+    }, [board_id]);
+    return <h1 className="title">{boardName}</h1>;
+  }
+
+  // 렌더링 부분에서 닫는 태그 오류 수정
+  // 로그인 상태를 관리하기 위한 상태 추가
+  const [loginStatus, setLoginStatus] = useState({
+    isLoggedIn: false,
+    displayName: ''
+  });
+
+  // 클라이언트 사이드에서만 쿠키 접근하도록 useEffect 사용
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const userData = getUserCookie();
+      if (userData) {
+        setLoginStatus({
+          isLoggedIn: true,
+          displayName: userData.nickname || userData.name || userData.id || '사용자'
+        });
+      } else {
+        setLoginStatus({
+          isLoggedIn: false,
+          displayName: ''
+        });
+      }
+    }
+  }, []);
+
+  return (
+    <div className="board-detail">
+      <div className="container">
+        <BoardTitle board_id={board_id || ''} />
+        
+        {/* 로그인 상태 표시 - 클라이언트 사이드 상태 사용 */}
+        <div className="board-detail__login-status">
+          {loginStatus.isLoggedIn ? (
+            <span className="board-detail__login-status-text">
+              {`${loginStatus.displayName}님 로그인 중`}
+            </span>
+          ) : (
+            <>
+              <span className="board-detail__login-status-text">비회원 상태</span>
+              <Link href="/auth/login" className="board-detail__login-link">로그인</Link>
+            </>
+          )}
+        </div>
+        
+        {board ? (
+          <div>
+            <h2 className="board-detail__title board-detail__title--left">{board.title}</h2>
+            <div className="board-detail__meta">
+              <span className="board-detail__author">
+                작성자: {board?.nickname 
+                       ? board.nickname 
+                       : (board?.name
+                           ? board.name
+                           : (typeof board?.author === 'object' 
+                               ? (board.author.nickname || board.author.name || board.author.id) 
+                               : (board?.author || '-')))}
+              </span>
+              <span className="board-detail__date">작성일: {board.created_at ? formatDate(board.created_at) : (board.createdAt ? formatDate(board.createdAt) : '-')}</span>
+              <span className="board-detail__views">조회수: {getViewCount(board)}</span>
+            </div>
+            {Array.isArray(board.files) && board.files.length > 0 && (
+              <div className="board-detail__files board-detail__files--left">
+                <strong className="board-detail__files-title">첨부파일</strong>
+                {board.files.map((file: any, idx: number) => (
+                  <div key={file.id ?? `${file.downloadUrl}-${idx}`} className="board-detail__file">
+                    - <a href={file.downloadUrl} download>{file.originalName}</a>
+                  </div>
+                ))}
+              </div>
+            )}
+            {Array.isArray(board.links) && board.links.length > 0 && (
+              <div className="board-detail__links board-detail__links--left">
+                <strong className="board-detail__links-title">링크</strong>
+                {board.links.map((link: any, idx: number) => {
+                  // 링크 객체 또는 문자열 처리
+                  const url = typeof link === 'string' ? link : (link?.url || link?.href || '');
+                  const title = typeof link === 'object' && link?.title ? link.title : url;
+                  const linkId = link?.id || idx;
+                  
+                  if (!url) return null;
+                  
+                  return (
+                    <div key={linkId} className="board-detail__link">
+                      - <Link href={url} target="_blank" rel="noopener noreferrer">{title}</Link>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            <div className="board-detail__content board-detail__content--left">
+              {normalizedFiles.some(f => isImageUrl(f.downloadUrl)) && (
+                <div className="board-detail__images" aria-label="첨부 이미지 목록">
+                  {normalizedFiles.filter(f => isImageUrl(f.downloadUrl)).map(img => (
+                    <figure key={img.id}>
+                      <img src={img.downloadUrl} alt={img.originalName} />
+                      {img.originalName && <figcaption className="blind">{img.originalName}</figcaption>}
+                    </figure>
+                  ))}
+                </div>
+              )}
+              <article>
+                {(board.content || '').split('\n').map((line, index) => (
+                  <p key={index}>{line}</p>
+                ))}
+              </article>
+            </div>
+            <section className="board-detail__comments">
+              <button
+                className="board-detail__comments-toggle board-detail__comments-toggle--left"
+                onClick={() => setShowComments(!showComments)}
+                type="button"
+              >
+                댓글({totalCommentCount}) {showComments ? '▲' : '▼'}
+              </button>
+              {showComments && (
+                <div className="comments">
+                  {comments.length > 0 ? (
+                    comments.map(comment => renderComment(comment))
+                  ) : (
+                    <div className="comments__empty">
+                      <p>첫 번째 댓글을 작성해보세요!</p>
+                    </div>
+                  )}
+                  <div className="comments__form-section">
+                    {!showCommentForm ? (
+                      <button 
+                        className="btn btn--primary"
+                        onClick={() => {
+                          setShowCommentForm(true);
+                          setReplyForm(null);
+                        }}
+                        type="button"
+                      >
+                        댓글 작성
+                      </button>
+                    ) : (
+                      <CommentForm
+                        onSubmit={handleCommentSubmit}
+                        onCancel={handleCommentFormCancel}
+                        placeholder="댓글을 입력하세요"
+                        isReply={false}
+                        user={currentUser}
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
+            </section>
+            {pageInfo && (pageInfo.prevPost || pageInfo.nextPost) && (
+              <nav className="board-detail__navigation board-detail__navigation--left">
+                {pageInfo.prevPost && pageInfo.prevPost.id && (
+                  <div className="board-detail__nav-item board-detail__nav-item--left">
+                    <span className="board-detail__nav-label">이전글</span>
+                    <Link href={`/board/${board_id}/${pageInfo.prevPost.id}`} className="board-detail__nav-title">
+                      {pageInfo.prevPost.title}
+                    </Link>
+                  </div>
+                )}
+                {pageInfo.nextPost && pageInfo.nextPost.id && (
+                  <div className="board-detail__nav-item board-detail__nav-item--left">
+                    <span className="board-detail__nav-label">다음글</span>
+                    <Link href={`/board/${board_id}/${pageInfo.nextPost.id}`} className="board-detail__nav-title">
+                      {pageInfo.nextPost.title}
+                    </Link>
+                  </div>
+                )}
+              </nav>
+            )}
+            <div className="board-detail__actions board-detail__actions--flex board-detail__actions--flex-between">
+              <div className="board-detail__actions-btn-box">
+                {/* 관리자면 항상 수정/삭제 버튼 표시 */}
+                {currentUser?.isAdmin && (
+                  <>
+                    <button type="button" className="btn btn--primary" onClick={handleEditPost}>수정(관리자)</button>
+                    <button type="button" className="btn btn--danger" onClick={handleDeletePost}>삭제(관리자)</button>
+                  </>
+                )}
+                
+                {/* 관리자가 아니면서 작성자인 경우 */}
+                {!currentUser?.isAdmin && board && currentUser?.id && board.author === currentUser.id && (
+                  <>
+                    <button type="button" className="btn btn--primary" onClick={handleEditPost}>수정</button>
+                    <button type="button" className="btn btn--danger" onClick={handleDeletePost}>삭제</button>
+                  </>
+                )}
+                
+                {/* 비회원 글인 경우 비밀번호 확인 수정/삭제 버튼 */}
+                {board && (board.author === 'guest' || (typeof board.author === 'object' && board.author?.id === 'guest')) && (
+                  <>
+                    <button type="button" className="btn btn--primary" onClick={handleEditPost}>비밀번호 수정</button>
+                    <button type="button" className="btn btn--danger" onClick={handleDeletePost}>비밀번호 삭제</button>
+                  </>
+                )}
+              </div>
+              <Link href={`/board/${board_id}`} className="btn btn--secondary">목록</Link>
+            </div>
+          </div>
+        ) : (
+          <div className="text-danger" style={{padding:'3rem',textAlign:'center'}}>
+            게시글을 찾을 수 없습니다.<br />
+            또는 서버 오류가 발생했습니다.<br />
+            <span style={{fontSize:'1.2rem',color:'#888'}}>관리자에게 문의하세요.</span>
+          </div>
+        )}
+      </div>
+      
+      {/* 비밀번호 입력 모달 - PasswordModal 컴포넌트 사용 */}
+      <PasswordModal 
+        type={passwordModalType}
+        isOpen={showPasswordModal}
+        onClose={() => {
+          setShowPasswordModal(false);
+          setPassword('');
+        }}
+        onSubmit={(inputPassword) => {
+          setPassword(inputPassword);
+          if (passwordModalType === 'edit') {
+            handlePasswordSubmitForEdit();
+          } else {
+            handlePasswordSubmitForDelete();
+          }
+        }}
+      />
+    </div>
+  );
+}
+
+export default BoardDetail;

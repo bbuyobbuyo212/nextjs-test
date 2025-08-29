@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_122" data-name="사각형 122" width="24" height="24" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="ico_cr_tel" transform="translate(-360 -1324)">
+    <circle id="타원_123" data-name="타원 123" cx="20" cy="20" r="20" transform="translate(360 1324)" fill="#efefef"/>
+    <g id="ico_tel" transform="translate(369.231 1332)">
+      <g id="그룹_1102" data-name="그룹 1102" clip-path="url(#clip-path)">
+        <path id="패스_2517" data-name="패스 2517" d="M19.43,21.351a1.37,1.37,0,0,1-.353.758l-1.341,1.344C13.162,27.282,7.356,21.579,7.3,21.521L4.262,18.483C4.2,18.425-1.5,12.62,2.31,8.063L3.675,6.7a1.37,1.37,0,0,1,.757-.353,1.324,1.324,0,0,1,.163-.01.7.7,0,0,1,.485.156L7.916,9.763a.872.872,0,0,1,0,1.233L6.881,12.032a2.892,2.892,0,0,0-.549.794,3.725,3.725,0,0,0,.97,3.918l1.744,1.745a3.713,3.713,0,0,0,3.926.953,2.908,2.908,0,0,0,.783-.55l1.026-1.026a.881.881,0,0,1,1.25.017l3.243,2.812A.8.8,0,0,1,19.43,21.351Z" transform="translate(1.42 -3.913)" fill="#878787"/>
+      </g>
+    </g>
+  </g>
+</svg>

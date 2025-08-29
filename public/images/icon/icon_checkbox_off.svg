@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <g id="ico_checkbox_off" transform="translate(-371 -2804)">
+    <g id="사각형_904" data-name="사각형 904" transform="translate(371 2804)" fill="#fff" stroke="#d6d6d7" stroke-width="1">
+      <rect width="16" height="16" stroke="none"/>
+      <rect x="0.5" y="0.5" width="15" height="15" fill="none"/>
+    </g>
+    <path id="Icon_akar-check" data-name="Icon akar-check" d="M6,12l3,3,5-6" transform="translate(369.5 2799.5)" fill="none" stroke="#d6d6d7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+  </g>
+</svg>

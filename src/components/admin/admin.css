@@ -1,0 +1,117 @@
+.user-form-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.user-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 18px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.user-form__input {
+  font-size: 16px;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.user-form__input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.user-form__btn {
+  font-size: 16px;
+  padding: 8px 18px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.user-form__btn.btn--primary {
+  background: #007bff;
+  color: #fff;
+}
+
+.user-form__btn:not(.btn--primary) {
+  background: #e9ecef;
+  color: #333;
+}
+
+.user-form__btn:hover {
+  opacity: 0.85;
+}
+
+.board-search-row--single {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.board-search-row--single .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.board-search-row--single .btn {
+  white-space: nowrap;
+}
+
+.common-list {
+  border: 1px solid #e2e5ea;
+  border-radius: 8px;
+  background: #fff;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.common-list__header,
+.common-list__row {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  border-bottom: 1px solid #e2e5ea;
+}
+
+.common-list__header {
+  background: #f6f8fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.common-list__row:last-child {
+  border-bottom: none;
+}
+
+.common-list__cell {
+  padding: 8px 12px;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.common-list__id { width: 60px; }
+.common-list__name { flex: 1; min-width: 120px; }
+.common-list__type { width: 100px; }
+.common-list__desc { flex: 2; min-width: 160px; }
+.common-list__date { width: 120px; }
+.common-list__actions { width: 140px; text-align: right; }
+
+.common-list__empty {
+  padding: 24px;
+  text-align: center;
+  color: #888;
+  background: #fafbfc;
+}
+

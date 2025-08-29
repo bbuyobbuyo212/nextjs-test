@@ -1,0 +1,50 @@
+.greeting-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e3f0ff 0%, #f9f9ff 100%);
+}
+
+.greeting-card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(30, 60, 120, 0.12);
+  padding: 48px 36px 36px 36px;
+  max-width: 420px;
+  text-align: center;
+  animation: fadeInUp 0.8s cubic-bezier(.23,1,.32,1);
+}
+
+.greeting-icon {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.greeting-title {
+  font-size: 3.2rem; /* 32px */
+  font-weight: 700;
+  color: #1976d2;
+  margin-bottom: 12px;
+  letter-spacing: -1px;
+}
+
+.greeting-desc {
+  font-size: 1.6rem; /* 16px */
+  color: #444;
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
